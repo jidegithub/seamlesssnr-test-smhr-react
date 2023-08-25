@@ -3,7 +3,7 @@ name: Compose
 on: [push]
 
 jobs:
-  job:
+  job1:
     # jest:
     #   if: github.event_name == 'pull_request'
     #   runs-on: ubuntu-latest
@@ -34,8 +34,7 @@ jobs:
 
         - name: Build Application
           run: npm run build
-
-  job:
+  job2:
     staging:
       runs-on: ubuntu-latest
 
@@ -47,8 +46,7 @@ jobs:
           run: |
             # Add your deployment script/commands here
             echo "deploy stage"
-
-  job:
+  job3:
     production:
       runs-on: ubuntu-latest
 
