@@ -3,7 +3,7 @@ name: Compose
 on: [push]
 
 jobs:
-  job1:
+  # job1:
     # jest:
     #   if: github.event_name == 'pull_request'
     #   runs-on: ubuntu-latest
@@ -15,8 +15,9 @@ jobs:
     #       run: npm test
 
     build:
-      runs-on: ubuntu-latest
 
+      name: build
+      runs-on: ubuntu-latest
       steps:
         - name: Checkout Repository
           uses: actions/checkout@v2
@@ -34,10 +35,11 @@ jobs:
 
         - name: Build Application
           run: npm run build
-  job2:
-    staging:
-      runs-on: ubuntu-latest
 
+    staging:
+
+      name: staging
+      runs-on: ubuntu-latest
       steps:
         - name: Checkout Repository
           uses: actions/checkout@v2
@@ -46,10 +48,11 @@ jobs:
           run: |
             # Add your deployment script/commands here
             echo "deploy stage"
-  job3:
-    production:
-      runs-on: ubuntu-latest
 
+    production:
+
+      name: production
+      runs-on: ubuntu-latest
       steps:
         - name: Checkout Repository
           uses: actions/checkout@v2
