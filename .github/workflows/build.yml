@@ -2,93 +2,94 @@ name: Compose
 
 on: [push]
 
-jobs:
-  # jest:
-  #   if: github.event_name == 'pull_request'
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: install modules
-  #       run: npm ci
-  #     - name: run tests
-  #       run: npm test
+jobs
+  job:
+    # jest:
+    #   if: github.event_name == 'pull_request'
+    #   runs-on: ubuntu-latest
+    #   steps:
+    #     - uses: actions/checkout@v2
+    #     - name: install modules
+    #       run: npm ci
+    #     - name: run tests
+    #       run: npm test
 
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Set Up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16
-
-      - name: Install Dependencies
-        run: npm install
-      
-      - name: Run Unit Tests
-        run: npm test
-
-      - name: Build Application
-        run: npm run build
-
-jobs:
-  staging:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Deploy to Staging
-        run: |
-          # Add your deployment script/commands here
-          echo "deploy stage"
-
-jobs:
-  production:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Deploy to Production
-        run: |
-          # Add your deployment script/commands here
-
-  manual_approval:
-    on-success:
+    build:
       runs-on: ubuntu-latest
-      if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
       steps:
-        - name: Request Manual Approval
-          uses: actions/github-script@v5
+        - name: Checkout Repository
+          uses: actions/checkout@v2
+
+        - name: Set Up Node.js
+          uses: actions/setup-node@v2
           with:
-            script: |
-              const { data } = await github.pulls.list({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                state: 'open'
-              });
+            node-version: 16
 
-              if (data.length === 0) {
-                console.log('No open pull requests.');
-                return;
-              }
+        - name: Install Dependencies
+          run: npm install
+        
+        - name: Run Unit Tests
+          run: npm test
 
-              const pullRequestNumber = data[0].number;
-              await github.pulls.createReview({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: pullRequestNumber,
-                event: 'APPROVE'
-              });
-    on-failure:
+        - name: Build Application
+          run: npm run build
+
+  job:
+    staging:
       runs-on: ubuntu-latest
-      if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+
       steps:
-        - run: echo 'The triggering workflow failed'
+        - name: Checkout Repository
+          uses: actions/checkout@v2
+
+        - name: Deploy to Staging
+          run: |
+            # Add your deployment script/commands here
+            echo "deploy stage"
+
+  job:
+    production:
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v2
+
+        - name: Deploy to Production
+          run: |
+            # Add your deployment script/commands here
+
+    manual_approval:
+      on-success:
+        runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+        steps:
+          - name: Request Manual Approval
+            uses: actions/github-script@v5
+            with:
+              script: |
+                const { data } = await github.pulls.list({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  state: 'open'
+                });
+
+                if (data.length === 0) {
+                  console.log('No open pull requests.');
+                  return;
+                }
+
+                const pullRequestNumber = data[0].number;
+                await github.pulls.createReview({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pullRequestNumber,
+                  event: 'APPROVE'
+                });
+      on-failure:
+        runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+        steps:
+          - run: echo 'The triggering workflow failed'
