@@ -48,7 +48,6 @@ jobs:
 
         - name: Deploy to Staging
           run: |
-            # Add your deployment script/commands here
             echo "deploy stage"
 
     production:
@@ -63,7 +62,6 @@ jobs:
 
         - name: Deploy to Production
           run: |
-            # Add your deployment script/commands here
             echo "production stage"
     
     tag:
