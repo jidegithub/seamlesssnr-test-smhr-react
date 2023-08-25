@@ -58,9 +58,9 @@ jobs:
       needs: staging
       steps:
         - uses: trstringer/manual-approval@v1
-        with:
-          secret: ${{ github.TOKEN }}
-          approvers: jidegithub
+          with:
+            secret: ${{ github.TOKEN }}
+            approvers: jidegithub
         - name: Checkout Repository
           uses: actions/checkout@v2
 
