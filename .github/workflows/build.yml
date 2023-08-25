@@ -3,15 +3,15 @@ name: PreStage
 on: [push]
 
 jobs:
-  jest:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: install modules
-        run: npm ci
-      - name: run tests
-        run: npm test
+  # jest:
+  #   if: github.event_name == 'pull_request'
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: install modules
+  #       run: npm ci
+  #     - name: run tests
+  #       run: npm test
 
   build:
     runs-on: ubuntu-latest
