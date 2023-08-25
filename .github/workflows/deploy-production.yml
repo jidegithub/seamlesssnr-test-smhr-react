@@ -7,7 +7,7 @@ on:
       - completed
 
 jobs:
-  deploy:
+  production:
     runs-on: ubuntu-latest
 
     steps:

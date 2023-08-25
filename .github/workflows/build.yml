@@ -1,4 +1,4 @@
-name: Pre staging
+name: Compose
 
 on: [push]
 
@@ -33,3 +33,62 @@ jobs:
 
       - name: Build Application
         run: npm run build
+
+jobs:
+  staging:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Deploy to Staging
+        run: |
+          # Add your deployment script/commands here
+          echo "deploy stage"
+
+jobs:
+  production:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Deploy to Production
+        run: |
+          # Add your deployment script/commands here
+
+  manual_approval:
+    on-success:
+      runs-on: ubuntu-latest
+      if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+      steps:
+        - name: Request Manual Approval
+          uses: actions/github-script@v5
+          with:
+            script: |
+              const { data } = await github.pulls.list({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open'
+              });
+
+              if (data.length === 0) {
+                console.log('No open pull requests.');
+                return;
+              }
+
+              const pullRequestNumber = data[0].number;
+              await github.pulls.createReview({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pullRequestNumber,
+                event: 'APPROVE'
+              });
+    on-failure:
+      runs-on: ubuntu-latest
+      if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+      steps:
+        - run: echo 'The triggering workflow failed'
