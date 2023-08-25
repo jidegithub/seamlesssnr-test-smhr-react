@@ -67,6 +67,25 @@ jobs:
           run: |
             # Add your deployment script/commands here
             echo "production stage"
+    
+    - name: Set Dist Version
+      run: |
+        BUILD_NUMBER="${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"
+        echo "${BUILD_NUMBER}"
+        VERSION="$(mvn -q -U -Dexpression=project.build.finalName help:evaluate -DforceStdout=true -DbuildNumber=${BUILD_NUMBER})"
+        echo "DIST_VERSION=${VERSION}" >> $GITHUB_ENV
+    - name: Create Tag
+      uses: actions/github-script@v6
+      needs: [build]
+      with:
+        script: |
+          const {DIST_VERSION} = process.env          
+          github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `refs/tags/${DIST_VERSION}`,
+              sha: context.sha
+          })
           
     rollback_on_failure:
       needs: production
@@ -85,65 +104,3 @@ jobs:
           run: |
             git reset --hard ${{ steps.get_latest_tag.outputs.tag }}
             # Additional steps to redeploy the rolled-back version
-    # on-success:
-    #   runs-on: ubuntu-latest
-    #   if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    #   steps:
-    #     - run: echo 'The triggering workflow passed'
-    # on-failure:
-    #     runs-on: ubuntu-latest
-    #     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
-    #     steps:
-    #       - run: echo 'The triggering workflow failed'
-
-    #   name: undo
-    #   # if: github.event_name == 'pull_request'
-    #   if: ${{ github.event.workflow_run.conclusion == 'failure' }}
-    #     steps:
-    #       - run: echo 'The triggering workflow failed'
-    #   runs-on: ubuntu-latest
-    #   steps: 
-    #     - name: Checkout
-    #       uses: actions/checkout@v2
-    #       with:
-    #         ref: ${{ github.event.inputs.branch }}
-    #         fetch-depth: 0 
-    #     - name: Undo Push
-    #       uses: exions/undo-push@v1
-    #       with:
-    #         branch: ${{ github.event.inputs.branch }}
-
-
-    # manual_approval:
-    #   on-success:
-    #     runs-on: ubuntu-latest
-    #     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-
-    #     steps:
-    #       - name: Request Manual Approval
-    #         uses: actions/github-script@v5
-    #         with:
-    #           script: |
-    #             const { data } = await github.pulls.list({
-    #               owner: context.repo.owner,
-    #               repo: context.repo.repo,
-    #               state: 'open'
-    #             });
-
-    #             if (data.length === 0) {
-    #               console.log('No open pull requests.');
-    #               return;
-    #             }
-
-    #             const pullRequestNumber = data[0].number;
-    #             await github.pulls.createReview({
-    #               owner: context.repo.owner,
-    #               repo: context.repo.repo,
-    #               pull_number: pullRequestNumber,
-    #               event: 'APPROVE'
-    #             });
-    #   on-failure:
-    #     runs-on: ubuntu-latest
-    #     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
-    #     steps:
-    #       - run: echo 'The triggering workflow failed'
