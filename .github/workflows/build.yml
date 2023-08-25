@@ -1,13 +1,9 @@
 name: PreStage
 
-on:
-  push:
-    branches:
-      - main
+on: [push]
 
 jobs:
   jest:
-    name: unit tests
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
