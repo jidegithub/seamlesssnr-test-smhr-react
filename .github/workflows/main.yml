@@ -69,7 +69,8 @@ jobs:
             echo "production stage"
     
     tag:
-      name: tag:
+
+      name: tag
       runs-on: ubuntu-latest
       needs: [build]
 
