@@ -59,7 +59,7 @@ jobs:
       steps:
         - uses: trstringer/manual-approval@v1
           with:
-            secret: ${{ github.TOKEN }}
+            secret: ${{ secrets.TOKEN }}
             approvers: jidegithub
         - name: Checkout Repository
           uses: actions/checkout@v2
