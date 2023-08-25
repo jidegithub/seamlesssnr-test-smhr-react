@@ -58,21 +58,18 @@ jobs:
       needs: staging
       steps:
         - uses: trstringer/manual-approval@v1
-          with:
-            # secret: ${{ secrets.TOKEN }}
-            approvers: jidegithub
-            secret: ${{ github.TOKEN }}
-            minimum-approvals: 1
-            issue-title: 'Manual Approval'
-            # issue-body: |
-            #   "Issue Body"
-        - name: Checkout Repository
-          uses: actions/checkout@v2
+            with:
+              secret: ${{ github.TOKEN }}
+              approvers: jidegithub
+              minimum-approvals: 1
+              issue-title: 'Manual Approval'
+        # - name: Checkout Repository
+        #   uses: actions/checkout@v2
 
-        - name: Deploy to Production
-          run: |
-            # Add your deployment script/commands here
-            echo "production stage"
+        # - name: Deploy to Production
+        #   run: |
+        #     # Add your deployment script/commands here
+        #     echo "production stage"
 
     # manual_approval:
     #   on-success:
