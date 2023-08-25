@@ -50,6 +50,8 @@ jobs:
           run: |
             # Add your deployment script/commands here
             echo "deploy stage"
+            echo $github.token
+            echo $github.TOKEN
 
     production:
 
