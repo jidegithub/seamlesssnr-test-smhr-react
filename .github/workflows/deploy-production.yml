@@ -1,0 +1,47 @@
+name: Deploy to Production
+
+on:
+  workflow_run:
+    workflows: ["Deploy to Staging"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Deploy to Production
+        run: |
+          # Add your deployment script/commands here
+
+  manual_approval:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Request Manual Approval
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const { data } = await github.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open'
+            });
+
+            if (data.length === 0) {
+              console.log('No open pull requests.');
+              return;
+            }
+
+            const pullRequestNumber = data[0].number;
+            await github.pulls.createReview({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pullRequestNumber,
+              event: 'APPROVE'
+            });
