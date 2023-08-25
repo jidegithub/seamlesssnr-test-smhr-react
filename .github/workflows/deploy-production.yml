@@ -19,29 +19,35 @@ jobs:
           # Add your deployment script/commands here
 
   manual_approval:
-    runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    on-success:
+      runs-on: ubuntu-latest
+      if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
-    steps:
-      - name: Request Manual Approval
-        uses: actions/github-script@v5
-        with:
-          script: |
-            const { data } = await github.pulls.list({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'open'
-            });
+      steps:
+        - name: Request Manual Approval
+          uses: actions/github-script@v5
+          with:
+            script: |
+              const { data } = await github.pulls.list({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open'
+              });
 
-            if (data.length === 0) {
-              console.log('No open pull requests.');
-              return;
-            }
+              if (data.length === 0) {
+                console.log('No open pull requests.');
+                return;
+              }
 
-            const pullRequestNumber = data[0].number;
-            await github.pulls.createReview({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: pullRequestNumber,
-              event: 'APPROVE'
-            });
+              const pullRequestNumber = data[0].number;
+              await github.pulls.createReview({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pullRequestNumber,
+                event: 'APPROVE'
+              });
+    on-failure:
+      runs-on: ubuntu-latest
+      if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+      steps:
+        - run: echo 'The triggering workflow failed'
