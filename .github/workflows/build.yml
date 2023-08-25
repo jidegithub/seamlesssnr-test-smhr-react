@@ -59,7 +59,7 @@ jobs:
       steps:
         - uses: trstringer/manual-approval@v1
           with:
-            secret: ${{ GITHUB_TOKEN }}
+            secret: ${{ github.token }}
             approvers: jidegithub
             minimum-approvals: 1
             issue-title: 'Manual Approval'
