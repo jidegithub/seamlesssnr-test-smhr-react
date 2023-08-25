@@ -53,21 +53,6 @@ jobs:
             # Add your deployment script/commands here
             echo "deploy stage"
 
-    production:
-
-      name: production
-      runs-on: ubuntu-latest
-      environment: 'prod'
-      needs: [build, staging]
-      steps:
-        - name: Checkout Repository
-          uses: actions/checkout@v2
-
-        - name: Deploy to Production
-          run: |
-            # Add your deployment script/commands here
-            echo "production stage"
-
     publish:
       runs-on: ubuntu-latest
       steps:
@@ -108,6 +93,20 @@ jobs:
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+    production:
+
+      name: production
+      runs-on: ubuntu-latest
+      environment: 'prod'
+      needs: [build, staging]
+      steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v2
+
+        - name: Deploy to Production
+          run: |
+            # Add your deployment script/commands here
+            echo "production stage"
     # on-success:
     #   runs-on: ubuntu-latest
     #   if: ${{ github.event.workflow_run.conclusion == 'success' }}
