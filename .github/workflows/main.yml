@@ -104,7 +104,6 @@ jobs:
           id: get_latest_tag
           run: echo "::set-output name=tag::$(git describe --abbrev=0 --tags)"
           run: echo "::set-output name=tag::$(git describe --abbrev=0 --tags)"
-          # run: echo "{name}={value}" >> $GITHUB_OUTPUT
 
         - name: Rollback to Previous Version
           run: |
