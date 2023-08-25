@@ -2,7 +2,7 @@ name: Compose
 
 on: [push]
 
-jobs
+jobs:
   job:
     # jest:
     #   if: github.event_name == 'pull_request'
