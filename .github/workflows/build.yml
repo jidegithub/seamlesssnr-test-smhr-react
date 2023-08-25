@@ -1,0 +1,35 @@
+name: Pre staging
+
+on: [push]
+
+jobs:
+  # jest:
+  #   if: github.event_name == 'pull_request'
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: install modules
+  #       run: npm ci
+  #     - name: run tests
+  #       run: npm test
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Install Dependencies
+        run: npm install
+      
+      - name: Run Unit Tests
+        run: npm test
+
+      - name: Build Application
+        run: npm run build
