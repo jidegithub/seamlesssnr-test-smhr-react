@@ -1,4 +1,4 @@
-name: Deploy to Staging
+name: Staging
 
 on:
   # Automatic trigger when pushing tags
@@ -8,9 +8,9 @@ on:
   #   tags:
   #     - 'v*'
   workflow_run:
-    workflows: ["build"]
-    type:
-      - complete
+    workflows: ["Pre staging"]
+    types:
+      - completed
 
 jobs:
   deploy:
