@@ -3,6 +3,9 @@ name: Compose
 on: 
   push:
     branches: [ main ]
+  workflow_run:
+    workflows: [build]
+    types: [completed]
 
 jobs:
     jest:
@@ -57,12 +60,6 @@ jobs:
       environment: 'prod'
       needs: [build, staging]
       steps:
-        # - uses: trstringer/manual-approval@v1
-        #   with:
-        #     secret: ${{ github.token }}
-        #     approvers: jidegithub
-        #     minimum-approvals: 1
-        #     issue-title: 'Manual Approval'
         - name: Checkout Repository
           uses: actions/checkout@v2
 
@@ -70,6 +67,38 @@ jobs:
           run: |
             # Add your deployment script/commands here
             echo "production stage"
+
+    
+    Undo:
+
+      on-success:
+        runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
+        steps:
+          - run: echo 'The triggering workflow passed'
+      on-failure:
+        runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+        steps:
+          - run: echo 'The triggering workflow failed'
+
+    #   name: undo
+    #   # if: github.event_name == 'pull_request'
+    #   if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    #     steps:
+    #       - run: echo 'The triggering workflow failed'
+    #   runs-on: ubuntu-latest
+    #   steps: 
+    #     - name: Checkout
+    #       uses: actions/checkout@v2
+    #       with:
+    #         ref: ${{ github.event.inputs.branch }}
+    #         fetch-depth: 0 
+    #     - name: Undo Push
+    #       uses: exions/undo-push@v1
+    #       with:
+    #         branch: ${{ github.event.inputs.branch }}
+
 
     # manual_approval:
     #   on-success:
