@@ -59,8 +59,14 @@ jobs:
       steps:
         - uses: trstringer/manual-approval@v1
           with:
-            secret: ${{ secrets.TOKEN }}
+            # secret: ${{ secrets.TOKEN }}
             approvers: jidegithub
+            secret: ${{ github.TOKEN }}
+            minimum-approvals: 1
+            approval-wait: 600
+            issue-title: 'Manual Approval'
+            # issue-body: |
+            #   "Issue Body"
         - name: Checkout Repository
           uses: actions/checkout@v2
 
