@@ -71,7 +71,7 @@ jobs:
     rollback_on_failure:
       needs: production
       runs-on: ubuntu-latest
-      if: ${{ needs.production.result == 'failure' }}
+      if: ${{ needs.production.result == 'success' }}
 
       steps:
         - name: Checkout Repository
