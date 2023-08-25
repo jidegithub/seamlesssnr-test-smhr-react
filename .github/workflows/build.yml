@@ -63,7 +63,6 @@ jobs:
             approvers: jidegithub
             secret: ${{ github.TOKEN }}
             minimum-approvals: 1
-            approval-wait: 600
             issue-title: 'Manual Approval'
             # issue-body: |
             #   "Issue Body"
