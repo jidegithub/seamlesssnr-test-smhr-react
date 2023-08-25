@@ -2,7 +2,7 @@ name: Deploy to Staging
 
 on:
   workflow_run:
-    workflows: ["Clone, Build, and Test"]
+    workflows: ["build-test-artifact"]
     types:
       - completed
 
@@ -17,3 +17,4 @@ jobs:
       - name: Deploy to Staging
         run: |
           # Add your deployment script/commands here
+          echo "deploy stage"

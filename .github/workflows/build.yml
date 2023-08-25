@@ -73,6 +73,7 @@ jobs:
         run: npm test
 
   build:
+    name: build-test-artifact
     runs-on: ubuntu-latest
 
     steps:
