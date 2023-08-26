@@ -68,31 +68,6 @@ jobs:
           run: |
             echo "production stage"
     
-    # tag:
-
-    #   name: tag
-    #   runs-on: ubuntu-latest
-    #   needs: [build]
-
-    #   steps: 
-    #     - name: Set Dist Version
-    #       run: |
-    #         BUILD_NUMBER="${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"
-    #         echo "${BUILD_NUMBER}"
-    #         VERSION="$(mvn -q -U -Dexpression=project.build.finalName help:evaluate -DforceStdout=true -DbuildNumber=${BUILD_NUMBER})"
-    #         echo "DIST_VERSION=${VERSION}" >> $GITHUB_ENV
-    #     - name: Create Tag
-    #       uses: actions/github-script@v6
-    #       with:
-    #         script: |
-    #           const {DIST_VERSION} = process.env          
-    #           github.rest.git.createRef({
-    #               owner: context.repo.owner,
-    #               repo: context.repo.repo,
-    #               ref: `refs/tags/${DIST_VERSION}`,
-    #               sha: context.sha
-    #           })
-
     netlify: 
 
       name: Netlify Deploy
@@ -101,7 +76,9 @@ jobs:
       env:
         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-      run: netlify deploy --prod
+      steps:
+        - name: Deploy site to Netlify
+          run: netlify deploy --prod
     
     rollback_on_failure:
       needs: production
@@ -121,3 +98,31 @@ jobs:
           run: |
             git reset --hard ${{ steps.get_latest_tag.outputs.tag }}
             # Additional steps to redeploy the rolled-back version
+    
+    
+    
+    
+    # tag:
+
+        #   name: tag
+        #   runs-on: ubuntu-latest
+        #   needs: [build]
+
+        #   steps: 
+        #     - name: Set Dist Version
+        #       run: |
+        #         BUILD_NUMBER="${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"
+        #         echo "${BUILD_NUMBER}"
+        #         VERSION="$(mvn -q -U -Dexpression=project.build.finalName help:evaluate -DforceStdout=true -DbuildNumber=${BUILD_NUMBER})"
+        #         echo "DIST_VERSION=${VERSION}" >> $GITHUB_ENV
+        #     - name: Create Tag
+        #       uses: actions/github-script@v6
+        #       with:
+        #         script: |
+        #           const {DIST_VERSION} = process.env          
+        #           github.rest.git.createRef({
+        #               owner: context.repo.owner,
+        #               repo: context.repo.repo,
+        #               ref: `refs/tags/${DIST_VERSION}`,
+        #               sha: context.sha
+        #           })
