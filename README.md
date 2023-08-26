@@ -56,5 +56,3 @@ Explain how others can contribute to your project. Include guidelines for creati
 This project is licensed under the [MIT License](LICENSE).
 
 ---
-
-Feel free to customize this template according to your project's specific details and requirements.
