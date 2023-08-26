@@ -54,12 +54,10 @@ jobs:
           run: npm run build
 
         - name: Deploy Site to Staging
+          run: netlify deploy --prod
           env:
             NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
             NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          steps:
-            - name: Deploy site to Netlify
-              run: netlify deploy --prod
 
     production:
 
